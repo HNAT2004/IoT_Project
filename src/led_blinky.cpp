@@ -3,7 +3,7 @@
 
 int ledDelay = 1000;   // mặc định
 
-// Hàm xử lý điều kiện nhiệt độ bằng switch-case
+// Task 1: Single LED Blink with Temperature Conditions
 void updateLedDelay(void *pvParameters) {
   while (1) {
     if (xSemaphoreTake(xBinarySemaphoreTemp, portMAX_DELAY) == pdTRUE) {

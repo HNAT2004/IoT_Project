@@ -1,6 +1,6 @@
 #include "neo_blinky.h"
 
-
+// Task 2: NeoPixel LED Control Based on Humidity
 void neo_blinky(void *pvParameters){
 
     Adafruit_NeoPixel strip(LED_COUNT, NEO_PIN, NEO_GRB + NEO_KHZ800);
