@@ -1,6 +1,7 @@
 #include "temp_humi_monitor.h"
 LiquidCrystal_I2C lcd(33,16,2);
 
+// Task 3
 void temp_humi_monitor(void *pvParameters){
     Wire.begin(11, 12);
     Serial.begin(115200);
