@@ -2,18 +2,19 @@
 
 
 int ledDelay = 1000;   // mặc định
+float recvTemp;
 
 // Hàm xử lý điều kiện nhiệt độ bằng switch-case
 void updateLedDelay(void *pvParameters) {
   while (1) {
-    if (xSemaphoreTake(xBinarySemaphoreTemp, portMAX_DELAY) == pdTRUE) {
-      if (glob_temperature >= 35) {
+    if(xQueueReceive(xQueueTemperature, &recvTemp, portMAX_DELAY)) {
+      if (recvTemp >= 35) {
         ledDelay = 250;  
       }
-      else if (glob_temperature >= 30 && glob_temperature < 35) {
+      else if (recvTemp >= 30 && recvTemp < 35) {
         ledDelay = 500;    
       }
-      else if (glob_temperature >= 25 && glob_temperature < 30) {
+      else if (recvTemp >= 25 && recvTemp < 30) {
         ledDelay = 1000;    
       }
       else{

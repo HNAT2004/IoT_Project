@@ -1,5 +1,6 @@
 #include "neo_blinky.h"
 
+float recvHumi;
 
 void neo_blinky(void *pvParameters){
 
@@ -10,11 +11,11 @@ void neo_blinky(void *pvParameters){
     strip.show();
 
     while(1) {
-        if (xSemaphoreTake(xBinarySemaphoreHumi, portMAX_DELAY) == pdTRUE) {       
-            if(glob_humidity > 80){
+        if(xQueueReceive(xQueueHumidity, &recvHumi, portMAX_DELAY)) {       
+            if(recvHumi > 80){
                 strip.setPixelColor(0, strip.Color(0, 0, 255)); 
             }
-            else if(glob_humidity > 20 && glob_humidity <= 80) {
+            else if(recvHumi > 20 && recvHumi <= 80) {
                 strip.setPixelColor(0, strip.Color(0, 255, 0)); 
             }
             else{

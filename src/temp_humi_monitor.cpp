@@ -11,14 +11,32 @@ void temp_humi_monitor(void *pvParameters){
         float temperature = dht20.getTemperature();
         float humidity = dht20.getHumidity();
 
+
         if (isnan(temperature) || isnan(humidity)) {
             Serial.println("Failed to read from DHT sensor!");
             temperature = humidity = -1;
         }
 
         // Update global variables
-        glob_temperature = temperature;
-        glob_humidity = humidity;
+        xQueueSend(xQueueTemperature, &temperature, portMAX_DELAY);
+        xQueueSend(xQueueHumidity, &humidity, portMAX_DELAY);
+
+        String state;
+        if (temperature < 0 || humidity < 0) {
+            state = "UNKNOWN";
+        }
+        else if (temperature >= 35 || humidity > 80) {
+            state = "CRITICAL";
+        }
+        else if ((temperature >= 30 && temperature < 35) || humidity <= 20) {
+            state = "WARNING";
+        }
+        else if (temperature >= 25 && temperature < 30 && humidity > 20 && humidity <= 80) {
+            state = "NORMAL";
+        }
+        else {
+            state = "UNKNOWN";
+        }
 
         // Print to Serial
         Serial.print("Humidity: ");
@@ -28,13 +46,10 @@ void temp_humi_monitor(void *pvParameters){
         Serial.println("°C");
 
         // Print to LCD
+        lcd.clear();
         lcd.setCursor(0,0); 
-        lcd.print("Temp: "); lcd.print(temperature); lcd.print(" C   "); 
-        lcd.setCursor(0,1); 
-        lcd.print("Humi: "); lcd.print(humidity); lcd.print(" %   ");
+        lcd.print(state);
 
-        xSemaphoreGive(xBinarySemaphoreTemp);
-        xSemaphoreGive(xBinarySemaphoreHumi);
         vTaskDelay(5000 / portTICK_PERIOD_MS);
     }
 }
