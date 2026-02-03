@@ -9,18 +9,18 @@ void neo_blinky(void *pvParameters){
     strip.clear();
     strip.show();
 
-    while(1) {
-        if (xSemaphoreTake(xBinarySemaphoreHumi, portMAX_DELAY) == pdTRUE) {       
-            if(glob_humidity > 80){
-                strip.setPixelColor(0, strip.Color(0, 0, 255)); 
-            }
-            else if(glob_humidity > 20 && glob_humidity <= 80) {
-                strip.setPixelColor(0, strip.Color(0, 255, 0)); 
-            }
-            else{
-                strip.setPixelColor(0, strip.Color(255, 0, 0));
-            }            
-            strip.show(); 
-        }
+    while(1) {                          
+        strip.setPixelColor(0, strip.Color(255, 0, 0)); // Set pixel 0 to red
+        strip.show(); // Update the strip
+
+        // Wait for 500 milliseconds
+        vTaskDelay(500);
+
+        // Set the pixel to off
+        strip.setPixelColor(0, strip.Color(0, 0, 0)); // Turn pixel 0 off
+        strip.show(); // Update the strip
+
+        // Wait for another 500 milliseconds
+        vTaskDelay(500);
     }
 }

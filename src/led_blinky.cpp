@@ -1,38 +1,12 @@
 #include "led_blinky.h"
 
-
-int ledDelay = 1000;   // mặc định
-
-// Hàm xử lý điều kiện nhiệt độ bằng switch-case
-void updateLedDelay(void *pvParameters) {
-  while (1) {
-    if (xSemaphoreTake(xBinarySemaphoreTemp, portMAX_DELAY) == pdTRUE) {
-      if (glob_temperature >= 35) {
-        ledDelay = 250;  
-      }
-      else if (glob_temperature >= 30 && glob_temperature < 35) {
-        ledDelay = 500;    
-      }
-      else if (glob_temperature >= 25 && glob_temperature < 30) {
-        ledDelay = 1000;    
-      }
-      else{
-        ledDelay = 2000; 
-      }
-    }
-  }
-}
-
-void led_blinky(void *pvParameters) {
-  Wire.begin(11, 12);
-  dht20.begin();
-  Serial.begin(115200);
+void led_blinky(void *pvParameters){
   pinMode(LED_GPIO, OUTPUT);
-
-  while (1) {
-    digitalWrite(LED_GPIO, HIGH);
-    vTaskDelay(ledDelay);
-    digitalWrite(LED_GPIO, LOW);
-    vTaskDelay(ledDelay);
+  
+  while(1) {                        
+    digitalWrite(LED_GPIO, HIGH);  // turn the LED ON
+    vTaskDelay(1000);
+    digitalWrite(LED_GPIO, LOW);  // turn the LED OFF
+    vTaskDelay(1000);
   }
 }
